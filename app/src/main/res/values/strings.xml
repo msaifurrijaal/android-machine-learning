@@ -9,6 +9,8 @@
     <string name="failed_to_load_image_from_uri">Failed to load image from URI</string>
     <string name="deskripsi_analisis">Deskripsi Analisis</string>
     <string name="lorem_ipsum">Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.</string>
-    <string name="berita_terbaru">Berita Terbaru</string>
+    <string name="berita_terbaru">Berita Kesehatan Terbaru</string>
+    <string name="default_text">-</string>
+    <string name="gagal_memuat_berita">Gagal memuat berita</string>
 
 </resources>

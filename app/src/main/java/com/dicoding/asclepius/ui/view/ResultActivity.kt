@@ -1,5 +1,6 @@
-package com.dicoding.asclepius.view
+package com.dicoding.asclepius.ui.view
 
+import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.dicoding.asclepius.R
@@ -14,17 +15,25 @@ class ResultActivity : AppCompatActivity() {
         binding = ActivityResultBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
-        val classifications = intent.getSerializableExtra(EXTRA_CLASSIFICATIONS) as? String
-        classifications?.let { showResults(it) }
+        val classifications = intent.getStringExtra(EXTRA_CLASSIFICATIONS)
+        val image = intent.getStringExtra(EXTRA_IMAGE)
+
+        if (classifications != null && image != null) {
+            showResults(classifications, image)
+        }
+
     }
 
-    private fun showResults(result: String) {
-
+    private fun showResults(result: String, image: String) {
+        val imageUri = Uri.parse(image)
+        binding.resultImage.setImageURI(imageUri)
         binding.resultText.text = result
     }
 
     companion object {
         const val EXTRA_CLASSIFICATIONS = "extra_classifications"
+        const val EXTRA_IMAGE = "extra_image"
+
     }
 
 

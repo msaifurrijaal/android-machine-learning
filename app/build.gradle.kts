@@ -1,3 +1,5 @@
+import java.util.Properties
+
 plugins {
     id("com.android.application")
     id("org.jetbrains.kotlin.android")
@@ -16,6 +18,13 @@ android {
         versionName = "1.0"
 
         testInstrumentationRunner = "androidx.test.runner.AndroidJUnitRunner"
+
+        val p = Properties()
+        p.load(project.rootProject.file("local.properties").reader())
+        val yourKey: String = p.getProperty("API_KEY")
+        val baseUrl: String = p.getProperty("BASE_URL")
+        buildConfigField("String", "API_KEY", "\"$yourKey\"")
+        buildConfigField("String", "BASE_URL", "\"$baseUrl\"")
     }
 
     buildTypes {
@@ -37,6 +46,7 @@ android {
     buildFeatures {
         viewBinding = true
         mlModelBinding = true
+        buildConfig = true
     }
 }
 
