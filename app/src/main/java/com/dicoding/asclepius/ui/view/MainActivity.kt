@@ -1,15 +1,15 @@
 package com.dicoding.asclepius.ui.view
 
-import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
-import androidx.activity.result.PickVisualMediaRequest
+import androidx.activity.result.contract.ActivityResultContract
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.net.toUri
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.dicoding.asclepius.R
@@ -17,18 +17,57 @@ import com.dicoding.asclepius.adapter.NewsAdapter
 import com.dicoding.asclepius.data.Resource
 import com.dicoding.asclepius.data.model.ArticlesItem
 import com.dicoding.asclepius.data.model.ResponseNews
+import com.dicoding.asclepius.data.model.ResultData
 import com.dicoding.asclepius.databinding.ActivityMainBinding
-import com.dicoding.asclepius.databinding.ActivityResultBinding
 import com.dicoding.asclepius.helper.ImageClassifierHelper
 import com.dicoding.asclepius.ui.viewmodel.MainViewModel
+import com.dicoding.asclepius.utils.formatDate
+import com.yalantis.ucrop.UCrop
 import org.tensorflow.lite.task.vision.classifier.Classifications
+import java.io.File
 import java.text.NumberFormat
+import java.util.Date
 
+@Suppress("UNCHECKED_CAST")
 class MainActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityMainBinding
     private var currentImageUri: Uri? = null
     private lateinit var mainViewModel: MainViewModel
+
+    private val uCropContract = object : ActivityResultContract<List<Uri>, Uri>() {
+        override fun parseResult(resultCode: Int, intent: Intent?): Uri {
+            return UCrop.getOutput(intent!!)!!
+        }
+
+        override fun createIntent(context: Context, input: List<Uri>): Intent {
+            val uriInput = input[0]
+            val uriOutput = input[1]
+
+            val uCrop = UCrop.of(uriInput, uriOutput)
+                .withAspectRatio(5f, 5f)
+                .withMaxResultSize(700, 700)
+
+            return uCrop.getIntent(context)
+        }
+    }
+
+    private val imageCropResult = registerForActivityResult(uCropContract) { uri ->
+        if (uri != null) {
+            currentImageUri = uri
+            showImage()
+        }
+    }
+
+    private val getContent =
+        registerForActivityResult(ActivityResultContracts.GetContent()) { uri ->
+            val uriInput: Uri = uri!!
+            val timeStamp = System.currentTimeMillis()
+            val uriOutput = File(filesDir, "imageCropped_${timeStamp}.jpg").toUri()
+
+            val listUri = listOf(uriInput, uriOutput)
+            imageCropResult.launch(listUri)
+        }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -47,11 +86,12 @@ class MainActivity : AppCompatActivity() {
                 is Resource.Error -> {
                     showError(resources.message)
                 }
+
                 is Resource.Loading -> {
                     showLoading()
                 }
+
                 is Resource.Success -> {
-                    Log.d("MainActivity", "data news : ${resources.data?.articles?.get(0)?.author}")
                     showDataNews(resources.data)
                 }
 
@@ -88,7 +128,7 @@ class MainActivity : AppCompatActivity() {
                 setHasFixedSize(true)
             }
 
-            newsAdapter.setOnItemClickCallback(object : NewsAdapter.OnItemClickCallback{
+            newsAdapter.setOnItemClickCallback(object : NewsAdapter.OnItemClickCallback {
                 override fun onItemClicked(news: ArticlesItem) {
                     val newsUrl = news.url
                     val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse(newsUrl))
@@ -111,27 +151,19 @@ class MainActivity : AppCompatActivity() {
             analyzeButton.setOnClickListener {
                 analyzeImage()
             }
+
+            ibHistory.setOnClickListener {
+                startActivity(Intent(this@MainActivity, HistoryActivity::class.java))
+            }
         }
     }
 
     private fun startGallery() {
-        launcherGallery.launch(PickVisualMediaRequest(ActivityResultContracts.PickVisualMedia.ImageOnly))
-    }
-
-    private val launcherGallery = registerForActivityResult(
-        ActivityResultContracts.PickVisualMedia()
-    ) { uri: Uri? ->
-        if (uri != null) {
-            currentImageUri = uri
-            showImage()
-        } else {
-            Log.d("Photo Picker", "No media selected")
-        }
+        getContent.launch("image/*")
     }
 
     private fun showImage() {
         currentImageUri?.let {
-            Log.d("Image URI", "showImage: $it")
             binding.previewImageView.setImageURI(it)
         }
     }
@@ -148,7 +180,10 @@ class MainActivity : AppCompatActivity() {
                             progressIndicator.visibility = View.GONE
                         }
 
-                        override fun onResults(results: List<Classifications>?, inferenceTime: Long) {
+                        override fun onResults(
+                            results: List<Classifications>?,
+                            inferenceTime: Long
+                        ) {
                             results?.let { it ->
                                 if (it.isNotEmpty() && it[0].categories.isNotEmpty()) {
                                     println(it)
@@ -159,6 +194,13 @@ class MainActivity : AppCompatActivity() {
                                             "${it.label} " + NumberFormat.getPercentInstance()
                                                 .format(it.score).trim()
                                         }
+                                    val currentDate = formatDate(Date())
+                                    val data = ResultData(
+                                        image = currentImageUri.toString(),
+                                        result = displayResult,
+                                        date = currentDate
+                                    )
+                                    mainViewModel.addResultData(data)
                                     moveToResult(displayResult)
                                 }
                             }

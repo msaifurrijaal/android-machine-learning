@@ -39,11 +39,6 @@
                     android:layout_marginStart="@dimen/normal_175"
                     android:text="@string/result" />
 
-                <View
-                    android:layout_width="0dp"
-                    android:layout_height="0dp"
-                    android:layout_weight="1" />
-
             </LinearLayout>
 
         </androidx.appcompat.widget.Toolbar>

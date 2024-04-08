@@ -15,6 +15,9 @@ class ResultActivity : AppCompatActivity() {
         binding = ActivityResultBinding.inflate(layoutInflater)
         setContentView(binding.root)
 
+        setSupportActionBar(binding.toolbarDetail)
+        supportActionBar?.setDisplayShowTitleEnabled(false)
+
         val classifications = intent.getStringExtra(EXTRA_CLASSIFICATIONS)
         val image = intent.getStringExtra(EXTRA_IMAGE)
 
@@ -22,6 +25,15 @@ class ResultActivity : AppCompatActivity() {
             showResults(classifications, image)
         }
 
+        onAction()
+    }
+
+    private fun onAction() {
+        binding.apply {
+            ibBack.setOnClickListener {
+                finish()
+            }
+        }
     }
 
     private fun showResults(result: String, image: String) {

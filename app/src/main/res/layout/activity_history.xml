@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".ui.view.HistoryActivity"
+    android:orientation="vertical">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/toolbarHistory"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:orientation="horizontal"
+            android:paddingEnd="@dimen/normal_100">
+
+            <ImageButton
+                android:id="@+id/ibBack"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:background="@android:color/transparent"
+                android:contentDescription="@null"
+                android:src="@drawable/baseline_arrow_back_ios_24"
+                app:tint="?android:textColorPrimary"
+                />
+
+            <TextView
+                style="@style/TextContent.TitleLarge"
+                android:layout_marginStart="@dimen/normal_175"
+                android:text="@string/riwayat" />
+
+        </LinearLayout>
+
+    </androidx.appcompat.widget.Toolbar>
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/rv_history"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginHorizontal="@dimen/normal_125"
+        android:visibility="gone"/>
+
+    <ProgressBar
+        android:id="@+id/pg_history"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/normal_250" />
+
+    <LinearLayout
+        android:id="@+id/container_empty"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_marginTop="@dimen/normal_250"
+        android:visibility="gone"
+        >
+
+        <ImageView
+            android:layout_width="@dimen/image_90_custom"
+            android:layout_height="@dimen/image_90_custom"
+            android:src="@drawable/baseline_do_disturb_24" />
+
+        <TextView
+            style="@style/TextContent.HeadlineMedium"
+            android:text="@string/belum_ada_riwayat"
+            android:layout_marginTop="@dimen/normal_125"/>
+
+    </LinearLayout>
+
+</LinearLayout>

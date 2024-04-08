@@ -4,9 +4,13 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.viewModelScope
 import com.dicoding.asclepius.data.Repository
 import com.dicoding.asclepius.data.Resource
 import com.dicoding.asclepius.data.model.ResponseNews
+import com.dicoding.asclepius.data.model.ResultData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 class MainViewModel(application: Application) : AndroidViewModel(application) {
 
@@ -25,6 +29,12 @@ class MainViewModel(application: Application) : AndroidViewModel(application) {
             repository.getNews() { resource ->
                 _dataNews.value = resource
             }
+        }
+    }
+
+    fun addResultData(data: ResultData) {
+        viewModelScope.launch(Dispatchers.IO) {
+            repository.addResultData(data)
         }
     }
 }
