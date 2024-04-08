@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".view.ResultActivity">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical">
+
+        <androidx.appcompat.widget.Toolbar
+            android:id="@+id/toolbarDetail"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:orientation="horizontal"
+                android:paddingEnd="@dimen/normal_100">
+
+                <ImageButton
+                    android:id="@+id/ibBack"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@android:color/transparent"
+                    android:contentDescription="@null"
+                    android:src="@drawable/baseline_arrow_back_ios_24"
+                    app:tint="?android:textColorPrimary" />
+
+                <TextView
+                    style="@style/TextContent.TitleLarge"
+                    android:layout_marginStart="@dimen/normal_175"
+                    android:text="@string/result" />
+
+                <View
+                    android:layout_width="0dp"
+                    android:layout_height="0dp"
+                    android:layout_weight="1" />
+
+            </LinearLayout>
+
+        </androidx.appcompat.widget.Toolbar>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="@dimen/normal_125">
+
+            <androidx.cardview.widget.CardView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                app:cardCornerRadius="@dimen/normal_100">
+
+                <ImageView
+                    android:id="@+id/result_image"
+                    android:layout_width="match_parent"
+                    android:layout_height="@dimen/custom_350"
+                    android:scaleType="fitCenter"
+                    tools:src="@tools:sample/avatars" />
+
+            </androidx.cardview.widget.CardView>
+
+            <TextView
+                style="@style/TextContent.TitleLarge.Bold"
+                android:layout_marginTop="@dimen/normal_125"
+                android:text="@string/result" />
+
+            <TextView
+                android:id="@+id/result_text"
+                style="@style/TextContent.BodyMedium"
+                android:layout_marginTop="@dimen/small_100"
+                android:text="@string/result" />
+
+            <TextView
+                style="@style/TextContent.TitleMedium.Bold"
+                android:layout_marginTop="@dimen/normal_125"
+                android:text="@string/deskripsi_analisis" />
+
+            <TextView
+                style="@style/TextContent.BodyMedium"
+                android:layout_marginTop="@dimen/small_100"
+                android:text="@string/lorem_ipsum" />
+
+        </LinearLayout>
+
+    </LinearLayout>
+
+</ScrollView>
